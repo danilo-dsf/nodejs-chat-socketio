@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat</title>
+
+  <!-- adicionando a cdn do jQuery -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <!-- adicionando a cdn do socket.io -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.1/socket.io.js"
+    integrity="sha512-oFOCo2/3DtjrJG4N27BjSLQWoiBv171sK6a+JiWjp/7agxC2nCUP358AqzxkBUb5jX8g6CYLPdSKQTbC0weCwA=="
+    crossorigin="anonymous"></script>
+
+    <!-- chamando arquivo css -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <form id="chat">
+    <input type="text" name="username" placeholder="Digite seu usuário">
+    <div class="messages"></div>
+    <input type="text" name="message" placeholder="Digite sua mensagem">
+    <button type="submit">Enviar</button>
+  </form>
+
+  <script type="text/javascript">
+    // conectar no socket
+    var socket = io('http://localhost:3333');
+
+    // função para renderizar a mensagem na tela utilizando jQuery
+    function renderMessage(message) {
+      $('.messages')
+        .append(
+          '<div class="message"><strong>' 
+          + message.author 
+          + '</strong>: ' 
+          + message.message 
+          + '</div>');
+    }
+
+    // ouvir o evento 'receivedMessage' enviado pelo backend
+    // para saber quando o frontend deve renderizar uma nova mensagem
+    socket.on('receivedMessage', (message) => {
+      renderMessage(message);
+    });
+
+    // ouvir o evento 'previousMessages' enviado pelo backend
+    // para conseguir carregar as mensagem já armazenadas
+    socket.on('previousMessages', (messages) => {
+      messages.forEach(message => {
+        renderMessage(message);
+      });
+    });
+
+    // envio de mensagens
+    $('#chat').submit((event) => {
+      event.preventDefault();
+
+      // armazenar o autor e a mensagem 
+      var author = $('input[name=username]').val();
+      var message = $('input[name=message]').val();
+
+      // verificação simples para evitar que as variáveis acima estejam vazias 
+      if (author.length && message.length) {
+        // enviar um objeto pelo websocket 
+        var messageObject = {
+          author,
+          message,
+        };
+      }
+
+      // logo ao fazer o envio da mensagem, ele fará a renderização da mesma na tela
+      renderMessage(messageObject);
+
+      // enviar os dados passando o nome do evento (pode ser qualquer nome) e o dado
+      socket.emit('sendMessage', messageObject);
+    });
+  </script>
+</body>
+</html>
