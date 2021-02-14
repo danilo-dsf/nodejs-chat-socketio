@@ -27,6 +27,12 @@ function renderMessage(message) {
       + '</div>');
 }
 
+// função de logout
+function logout() {
+  localStorage.removeItem('user');
+  window.location.href = '/';
+}
+
 // ouvir o evento 'receivedMessage' enviado pelo backend
 // para saber quando o frontend deve renderizar uma nova mensagem
 socket.on('receivedMessage', (message) => {
