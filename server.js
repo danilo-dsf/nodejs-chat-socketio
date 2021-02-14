@@ -27,6 +27,8 @@ let messages = [];
 
 //definir forma de conexão do servidor com o websocket
 io.on('connection', socket => {
+  console.log(`Socket conectado ${socket.id}`);
+
   // assim que o socket conectar na aplicação
   // enviaremos, para ele, as mensagens já armazenadas no servidor
   socket.emit('previousMessages', messages);
