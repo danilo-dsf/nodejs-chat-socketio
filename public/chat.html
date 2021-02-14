@@ -25,17 +25,22 @@
     >
 </head>
 
-<body>
+<body onload="loadUser()">
   <div class="container-fluid vh-100 d-flex align-items-center justify-content-center">
-    <form id="chat" class="d-flex flex-column align-items-center justify-content-center">
+    <form id="chat">
       <div class="input-group">
         <span class="input-group-text" id="basic-addon1">👤</span>
-        <input class="form-control" type="text" name="username" placeholder="Digite seu usuário">
+        <input class="form-control" type="text" name="username" id="username" disabled placeholder="Digite seu usuário">
       </div>
-      <a href="./chat.html" class="btn btn-primary mt-3" onclick="onLoginClick(event)">Entrar</a>
+      <div class="messages"></div>
+      <div class="input-group">
+        <span class="input-group-text" id="basic-addon1">💬</span>
+        <input class="form-control" type="text" name="message" id="message" placeholder="Digite sua mensagem">
+        <button class="btn btn-primary" id="button-addon2" type="submit">Enviar</button>
+      </div>
     </form>
-
-    <script src="./index.js"></script>
   </div>
+
+  <script src="./chat.js"></script>
 </body>
 </html>
